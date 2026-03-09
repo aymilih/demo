@@ -3,53 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dossier Médical - Prototype AfriHealthID</title>
+  <title>Africa Health ID - Dossier Amina</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; color: #333; }
-    .container { max-width: 600px; margin: auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-    .header { background: #006400; color: white; padding: 20px; text-align: center; }
-    .header h1 { margin: 0; font-size: 1.6em; }
-    .content { padding: 20px; }
-    .info { margin-bottom: 20px; }
-    .info h2 { color: #006400; border-bottom: 2px solid #e0ffe0; padding-bottom: 8px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    th { background: #e0ffe0; color: #006400; }
-    .button { display: inline-block; background: #006400; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; margin-top: 15px; cursor: pointer; }
-    .button:hover { background: #004d00; }
-    .footer { text-align: center; font-size: 0.8em; color: #777; padding: 15px; border-top: 1px solid #eee; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      min-height: 100vh;
+    }
+    .phone-frame {
+      max-width: 390px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 38px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      border: 12px solid #000;
+      position: relative;
+    }
+    .status-bar {
+      height: 44px;
+      background: #000;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .header {
+      background: linear-gradient(135deg, #006400 0%, #228B22 100%);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-arrow { font-size: 24px; font-weight: bold; }
+    .title { font-size: 18px; font-weight: 600; flex: 1; text-align: center; }
+    .qr-icon { font-size: 24px; }
+    .profile-section {
+      padding: 24px 20px 16px;
+      background: linear-gradient(to bottom, #f9fff9 0%, #ffffff 60%);
+      text-align: center;
+    }
+    .avatar-placeholder {
+      width: 90px;
+      height: 90px;
+      background: #e0f0e0;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: #006400;
+      border: 4px solid white;
+      box-shadow: 0 4px 12px rgba(0,100,0,0.15);
+    }
+    .name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .id-line { font-size: 15px; color: #444; margin-bottom: 12px; }
+    .meta {
+      display: flex;
+      justify-content: space-around;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .meta-item { text-align: center; }
+    .meta-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+    .meta-value { font-weight: 600; color: #006400; }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      background: white;
+    }
+    .tab {
+      flex: 1;
+      padding: 14px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      color: #666;
+      cursor: pointer;
+    }
+    .tab.active {
+      color: #006400;
+      border-bottom: 3px solid #006400;
+    }
+    .content {
+      padding: 20px;
+      background: white;
+    }
+    .entry {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .entry:last-child { border-bottom: none; }
+    .entry-date {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .entry-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .icon {
+      width: 28px;
+      height: 28px;
+      background: #e0ffe0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #006400;
+    }
+    .diagnosis { font-size: 15px; margin-bottom: 4px; }
+    .treatment { font-size: 14px; color: #006400; font-weight: 500; }
+
+    @media (max-width: 500px) {
+      .phone-frame { margin: 10px; border-width: 8px; border-radius: 28px; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Dossier Médical Sécurisé</h1>
-      <p>Prototype AfriHealthID – Données fictives pour démo</p>
-    </div>
-    <div class="content">
-      <div class="info">
-        <h2>Informations Personnelles</h2>
-        <p><strong>Nom :</strong> Tankeu<br>
-           <strong>Prénom :</strong> Émilie<br>
-           <strong>ID Santé :</strong> 2048-6733<br>
-           <strong>Date de Naissance :</strong> 15/03/2004<br>
-           <strong>Groupe Sanguin :</strong> A+<br>
-           <strong>Nationalité :</strong> Kenya</p>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span>13:47</span>
+    <span>||| ○○○</span>
+  </div>
+
+  <div class="header">
+    <div class="back-arrow">←</div>
+    <div class="title">Africa Health ID</div>
+    <div class="qr-icon">□</div>
+  </div>
+
+  <div class="profile-section">
+    <div class="avatar-placeholder">A</div>
+    <div class="name">Amina Diop</div>
+    <div class="id-line">ID: 2048-67333</div>
+
+    <div class="meta">
+      <div class="meta-item">
+        <div class="meta-label">Date de naissance</div>
+        <div class="meta-value">15/06/1990</div>
       </div>
-      <div class="info">
-        <h2>Historique Médical (exemples)</h2>
-        <table>
-          <tr><th>Date</th><th>Consultation</th><th>Diagnostic / Traitement</th></tr>
-          <tr><td>01/03/2026</td><td>Dispensaire rural</td><td>Grippe saisonnière – Repos + paracétamol</td></tr>
-          <tr><td>15/02/2026</td><td>Centre de santé</td><td>Vaccin COVID-19 booster – Aucun effet secondaire</td></tr>
-          <tr><td>10/01/2026</td><td>Hôpital régional</td><td>Contrôle tension – Normale, suivi annuel</td></tr>
-        </table>
+      <div class="meta-item">
+        <div class="meta-label">Sexe</div>
+        <div class="meta-value">Femme</div>
       </div>
-      <button class="button" onclick="alert('Accès soignant : Authentification professionnelle requise (démo)')">Accéder aux détails avancés (soignant)</button>
-    </div>
-    <div class="footer">
-      Prototype conceptuel – Projet en développement – Données fictives uniquement
+      <div class="meta-item">
+        <div class="meta-label">Groupe</div>
+        <div class="meta-value">O+</div>
+      </div>
     </div>
   </div>
+
+  <div class="tabs">
+    <div class="tab active">Profil</div>
+    <div class="tab">Historique médical</div>
+    <div class="tab">Ordonnances</div>
+  </div>
+
+  <div class="content">
+    <div class="entry">
+      <div class="entry-date">14 avril 2024</div>
+      <div class="entry-title">
+        <div class="icon">🩺</div>
+        Consultation à l'Hôpital Principal de Dakar
+      </div>
+      <div class="diagnosis">Hypertension Artérielle</div>
+      <div class="treatment">Amlodipine, Hydrochlorothiazide</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-date">17 janvier 2024</div>
+      <div class="entry-title">
+        <div class="icon">🏥</div>
+        Hospitalisation aux Urgences de Dakar
+      </div>
+      <div class="diagnosis">Fracture au bras gauche</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-date">02 octobre 2023</div>
+      <div class="entry-title">
+        <div class="icon">🩺</div>
+        Consultation au Centre Médical Dakar Plateau
+      </div>
+      <div class="diagnosis">Contrôle trimestriel</div>
+      <div class="treatment">Tension élevée, Cholestérol élevé</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-date">19 juin 2023</div>
+      <div class="entry-title">
+        <div class="icon">🩺</div>
+        Consultation au Centre Médical Dakar Plateau
+      </div>
+      <div class="diagnosis">Traitement du diabète de type 2</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
