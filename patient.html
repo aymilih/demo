@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Africa Health ID - Émilie</title>
+  <style>
+    :root {
+      --primary: #0f62fe;
+      --accent: #00b894;
+      --text: #0f172a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background:#e2e8f0; 
+      min-height:100vh; 
+      display:flex; 
+      align-items:center; 
+      justify-content:center; 
+      padding:20px;
+    }
+    .phone-frame { 
+      width:375px; 
+      height:812px; 
+      background:#000; 
+      border-radius:60px; 
+      padding:12px; 
+      box-shadow:0 60px 120px rgba(0,0,0,0.35); 
+      overflow:hidden; 
+    }
+    .screen { 
+      background:var(--bg); 
+      height:100%; 
+      border-radius:48px; 
+      overflow:hidden; 
+      display:flex; 
+      flex-direction:column; 
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0f62fe, #00b894);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ÉCRAN APRÈS SCAN QR */
+    .scan-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 24px;
+      background: white;
+      gap: 24px;
+      text-align: center;
+    }
+    .scan-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+    .scan-subtitle { font-size: 16px; color: #64748b; margin-bottom: 32px; }
+    .choice-btn {
+      padding: 20px;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .choice-btn:hover {
+      border-color: var(--primary);
+      background: #f0f7ff;
+    }
+    .choice-btn.patient {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+
+    /* PROFIL */
+    .profile {
+      padding: 24px 20px;
+      background: white;
+      text-align: center;
+    }
+    .avatar {
+      width: 88px;
+      height: 88px;
+      background: #e0f0ff;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: #0f62fe;
+      border: 4px solid white;
+      box-shadow: 0 6px 16px rgba(15,98,254,0.15);
+    }
+    .name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .id { font-size: 15px; color: #475569; margin-bottom: 8px; }
+    .nationality { font-size: 15px; color: #0f62fe; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .tab {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      color: #64748b;
+      cursor: pointer;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 4px solid var(--primary);
+    }
+
+    /* CONTENT */
+    .content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .info-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+      line-height: 1.8;
+    }
+    .history-item {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .date { font-size: 13px; color: #64748b; margin-bottom: 8px; }
+    .diagnosis { font-weight: 600; margin-bottom: 4px; }
+    .treatment { color: var(--accent); font-size: 14px; }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="screen">
+
+    <!-- ÉCRAN APRÈS SCAN QR -->
+    <div id="scan-screen" class="scan-screen">
+      <div class="scan-title">Vous avez scanné la carte d'Émilie Tankeu</div>
+      <div class="scan-subtitle">ID Santé : 2048-6733</div>
+      
+      <div class="choice-btn patient" onclick="selectRole(0)">Patient</div>
+      <div class="choice-btn" onclick="selectRole(1)">Soignant</div>
+    </div>
+
+    <!-- INTERFACE PATIENT -->
+    <div id="patient-screen" style="display:none; flex-direction:column; height:100%;">
+      <div class="header">Africa Health ID</div>
+
+      <div class="profile">
+        <div class="avatar">E</div>
+        <div class="name">Émilie Tankeu</div>
+        <div class="id">ID Santé : 2048-6733</div>
+        <div class="nationality">🇰🇪 Kenyane</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="showTab(0)">Profil</div>
+        <div class="tab" onclick="showTab(1)">Historique médical</div>
+        <div class="tab" onclick="showTab(2)">Ordonnances</div>
+      </div>
+
+      <div class="content">
+        <!-- Profil -->
+        <div id="tab0" class="section active">
+          <div class="info-card">
+            <strong>Date de naissance :</strong> 15/03/2004<br>
+            <strong>Sexe :</strong> Femme<br>
+            <strong>Groupe sanguin :</strong> A+<br>
+            <strong>Carte valide jusqu'au :</strong> 15/03/2029
+          </div>
+        </div>
+
+        <!-- Historique médical -->
+        <div id="tab1" class="section">
+          <div class="history-item">
+            <div class="date">01 mars 2026</div>
+            <div class="diagnosis">Grippe saisonnière</div>
+            <div class="treatment">Repos + paracétamol</div>
+          </div>
+          <div class="history-item">
+            <div class="date">15 février 2026</div>
+            <div class="diagnosis">Vaccin COVID-19 booster</div>
+            <div class="treatment">Aucun effet secondaire</div>
+          </div>
+          <div class="history-item">
+            <div class="date">10 janvier 2026</div>
+            <div class="diagnosis">Contrôle tension artérielle</div>
+            <div class="treatment">Normale • Suivi annuel</div>
+          </div>
+          <div class="history-item">
+            <div class="date">05 décembre 2025</div>
+            <div class="diagnosis">Consultation de routine</div>
+            <div class="treatment">Bilan sanguin normal</div>
+          </div>
+        </div>
+
+        <!-- Ordonnances -->
+        <div id="tab2" class="section">
+          <div class="history-item">
+            <div class="date">01 mars 2026</div>
+            <div class="diagnosis">Ordonnance grippe</div>
+            <div class="treatment">Paracétamol 500mg – 3/jour pendant 5 jours</div>
+          </div>
+          <div class="history-item">
+            <div class="date">15 février 2026</div>
+            <div class="diagnosis">Ordonnance vaccinale</div>
+            <div class="treatment">COVID-19 booster</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        Prototype conceptuel – Africa Health ID
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function selectRole(role) {
+    if (role === 0) { // Patient
+      document.getElementById('scan-screen').style.display = 'none';
+      document.getElementById('patient-screen').style.display = 'flex';
+    } else {
+      alert("Interface soignant en cours de développement");
+    }
+  }
+
+  function showTab(n) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab' + n).classList.add('active');
+    document.querySelectorAll('.tab')[n].classList.add('active');
+  }
+</script>
+
+</body>
+</html>
