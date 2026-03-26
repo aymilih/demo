@@ -2,275 +2,789 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Africa Health ID - Émilie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Prototype conceptuel Africa Health ID - interface patient"
+  />
+  <title>Africa Health ID - Interface Patient</title>
+
   <style>
     :root {
       --primary: #0f62fe;
+      --primary-dark: #0b4ecc;
       --accent: #00b894;
+      --accent-dark: #009874;
       --text: #0f172a;
+      --muted: #64748b;
       --bg: #f8fafc;
       --card: #ffffff;
       --border: #e2e8f0;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      background:#e2e8f0; 
-      min-height:100vh; 
-      display:flex; 
-      align-items:center; 
-      justify-content:center; 
-      padding:20px;
-    }
-    .phone-frame { 
-      width:375px; 
-      height:812px; 
-      background:#000; 
-      border-radius:60px; 
-      padding:12px; 
-      box-shadow:0 60px 120px rgba(0,0,0,0.35); 
-      overflow:hidden; 
-    }
-    .screen { 
-      background:var(--bg); 
-      height:100%; 
-      border-radius:48px; 
-      overflow:hidden; 
-      display:flex; 
-      flex-direction:column; 
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+      --radius: 16px;
+      --transition: 0.25s ease;
     }
 
-    /* HEADER */
-    .header {
-      background: linear-gradient(135deg, #0f62fe, #00b894);
-      color: white;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #e2e8f0;
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
       padding: 20px;
-      text-align: center;
-      font-size: 21px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
-    /* ÉCRAN APRÈS SCAN QR */
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .app-shell {
+      position: relative;
+      width: 375px;
+      height: 812px;
+      background: #000;
+      border-radius: 60px;
+      padding: 12px;
+      box-shadow: 0 60px 120px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+
+    .screen {
+      position: relative;
+      background: var(--bg);
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      padding: 16px 20px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 96px;
+      flex-shrink: 0;
+    }
+
+    .hamburger {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      color: #fff;
+      transition: background var(--transition);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .hamburger:hover,
+    .hamburger:focus-visible {
+      background: rgba(255, 255, 255, 0.16);
+      outline: none;
+    }
+
+    .header-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .user-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .user-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .scan-screen {
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 40px 24px;
-      background: white;
-      gap: 24px;
-      text-align: center;
-    }
-    .scan-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
-    .scan-subtitle { font-size: 16px; color: #64748b; margin-bottom: 32px; }
-    .choice-btn {
-      padding: 20px;
-      border: 2px solid var(--border);
-      border-radius: 20px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .choice-btn:hover {
-      border-color: var(--primary);
-      background: #f0f7ff;
-    }
-    .choice-btn.patient {
-      background: var(--accent);
-      color: white;
-      border: none;
-    }
-
-    /* PROFIL */
-    .profile {
-      padding: 24px 20px;
-      background: white;
-      text-align: center;
-    }
-    .avatar {
-      width: 88px;
-      height: 88px;
-      background: #e0f0ff;
-      border-radius: 50%;
-      margin: 0 auto 12px;
-      display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
-      color: #0f62fe;
-      border: 4px solid white;
-      box-shadow: 0 6px 16px rgba(15,98,254,0.15);
+      padding: 28px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top right, rgba(0, 184, 148, 0.08), transparent 35%),
+        linear-gradient(180deg, #ffffff, #f8fafc);
     }
-    .name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-    .id { font-size: 15px; color: #475569; margin-bottom: 8px; }
-    .nationality { font-size: 15px; color: #0f62fe; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-    /* TABS */
+    .scan-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 42px;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 40px rgba(15, 98, 254, 0.18);
+    }
+
+    .scan-title {
+      font-size: 24px;
+      line-height: 1.3;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .scan-subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 28px;
+    }
+
+    .choice-group {
+      width: 100%;
+      display: grid;
+      gap: 12px;
+      max-width: 280px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .choice-btn.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .choice-btn.secondary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .choice-btn.disabled {
+      background: #ffffff;
+      color: #94a3b8;
+      box-shadow: none;
+      border: 1px solid #e2e8f0;
+      cursor: not-allowed;
+    }
+
+    .choice-btn:hover,
+    .choice-btn:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .choice-btn.disabled:hover,
+    .choice-btn.disabled:focus-visible {
+      transform: none;
+      outline: none;
+    }
+
+    .patient-screen {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+
+    .menu-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 30;
+    }
+
+    .menu-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 12px 0 30px rgba(0, 0, 0, 0.18);
+      transform: translateX(-100%);
+      transition: transform var(--transition);
+      z-index: 40;
+      padding-top: 92px;
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu-item {
+      width: 100%;
+      text-align: left;
+      padding: 18px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      background: #fff;
+      transition: background var(--transition);
+    }
+
+    .menu-item:hover,
+    .menu-item:focus-visible {
+      background: #f8fafc;
+      outline: none;
+    }
+
+    .patient-header {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .avatar-large {
+      width: 72px;
+      height: 72px;
+      background: #e0f0ff;
+      color: var(--primary);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      font-weight: 700;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 12px rgba(15, 98, 254, 0.15);
+      flex-shrink: 0;
+    }
+
+    .patient-info h1 {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .patient-meta {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #475569;
+    }
+
     .tabs {
       display: flex;
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
+
     .tab {
       flex: 1;
-      padding: 16px;
+      padding: 16px 10px;
       text-align: center;
-      font-weight: 600;
-      font-size: 15px;
-      color: #64748b;
-      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--muted);
+      border-bottom: 4px solid transparent;
+      transition: color var(--transition), border-color var(--transition), background var(--transition);
     }
+
     .tab.active {
       color: var(--primary);
-      border-bottom: 4px solid var(--primary);
+      border-bottom-color: var(--primary);
     }
 
-    /* CONTENT */
+    .tab:hover,
+    .tab:focus-visible {
+      background: #f8fafc;
+      outline: none;
+    }
+
     .content {
       flex: 1;
-      padding: 24px;
       overflow-y: auto;
+      padding: 18px 20px 28px;
     }
-    .section { display: none; }
-    .section.active { display: block; }
 
-    .info-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 24px;
-      line-height: 1.8;
+    .section {
+      display: none;
     }
-    .history-item {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
+
+    .section.active {
+      display: block;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 18px;
       margin-bottom: 16px;
     }
-    .date { font-size: 13px; color: #64748b; margin-bottom: 8px; }
-    .diagnosis { font-weight: 600; margin-bottom: 4px; }
-    .treatment { color: var(--accent); font-size: 14px; }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 10px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .info-label {
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .history-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .date {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .diagnosis {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .treatment {
+      font-size: 14px;
+      color: var(--accent-dark);
+      line-height: 1.5;
+    }
+
+    .prescription-item {
+      display: grid;
+      gap: 6px;
+    }
+
+    .prescription-name {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .prescription-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
     .footer {
       text-align: center;
       font-size: 12px;
       color: #94a3b8;
-      padding: 16px;
+      padding: 14px 16px 18px;
+      background: transparent;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+      }
+
+      .app-shell {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        padding: 0;
+      }
+
+      .screen {
+        border-radius: 0;
+      }
     }
   </style>
 </head>
 <body>
+  <main class="app-shell" aria-label="Prototype Africa Health ID patient">
+    <div class="screen">
+      <section id="scan-screen" class="scan-screen" aria-labelledby="scan-title">
+        <div class="scan-icon" aria-hidden="true">⌁</div>
+        <h1 id="scan-title" class="scan-title">Vous avez scanné la carte de Fatou Ndiaye</h1>
+        <p class="scan-subtitle">ID Santé : 3095-1142</p>
 
-<div class="phone-frame">
-  <div class="screen">
+        <div class="choice-group">
+          <button type="button" class="choice-btn primary" data-role="patient">
+            Patient
+          </button>
+          <button type="button" class="choice-btn disabled" data-role="soignant" disabled>
+            Soignant
+          </button>
+        </div>
+      </section>
 
-    <!-- ÉCRAN APRÈS SCAN QR -->
-    <div id="scan-screen" class="scan-screen">
-      <div class="scan-title">Vous avez scanné la carte d'Émilie Tankeu</div>
-      <div class="scan-subtitle">ID Santé : 2048-6733</div>
-      
-      <div class="choice-btn patient" onclick="selectRole(0)">Patient</div>
-      <div class="choice-btn" onclick="selectRole(1)">Soignant</div>
+      <section id="patient-screen" class="patient-screen hidden" aria-label="Interface patient">
+        <div id="menu-backdrop" class="menu-backdrop" aria-hidden="true"></div>
+
+        <nav id="menu" class="menu" aria-label="Menu latéral patient">
+          <button type="button" class="menu-item">Mon dossier</button>
+          <button type="button" class="menu-item">Historique médical</button>
+          <button type="button" class="menu-item">Ordonnances</button>
+          <button type="button" class="menu-item">Analyses</button>
+          <button type="button" class="menu-item">Assurance</button>
+          <button type="button" class="menu-item">Paramètres</button>
+        </nav>
+
+        <header class="header">
+          <button
+            id="menu-toggle"
+            class="hamburger"
+            type="button"
+            aria-label="Ouvrir le menu"
+            aria-expanded="false"
+            aria-controls="menu"
+          >
+            ☰
+          </button>
+
+          <div class="header-main">
+            <div class="header-title">Africa Health ID</div>
+            <div class="user-line" aria-label="Utilisateur connecté">
+              <div class="user-avatar" aria-hidden="true">F</div>
+              <span class="user-name">Mon espace patient</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="patient-header" aria-labelledby="patient-name">
+          <div class="avatar-large" aria-hidden="true">F</div>
+          <div class="patient-info">
+            <h1 id="patient-name">Fatou Ndiaye</h1>
+            <div class="patient-meta">
+              ID : 3095-1142<br />
+              Date de naissance : 22/08/1994<br />
+              Sexe : Femme<br />
+              Groupe sanguin : A+<br />
+              Ethnie : Wolof
+            </div>
+          </div>
+        </section>
+
+        <div class="tabs" role="tablist" aria-label="Navigation du dossier patient">
+          <button
+            class="tab active"
+            id="tab-btn-0"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="tab-0"
+          >
+            Profil
+          </button>
+          <button
+            class="tab"
+            id="tab-btn-1"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="tab-1"
+          >
+            Historique médical
+          </button>
+          <button
+            class="tab"
+            id="tab-btn-2"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="tab-2"
+          >
+            Ordonnances
+          </button>
+        </div>
+
+        <div class="content">
+          <section
+            id="tab-0"
+            class="section active"
+            role="tabpanel"
+            aria-labelledby="tab-btn-0"
+          >
+            <article class="card">
+              <h2 class="section-title">Informations personnelles</h2>
+              <div class="info-list">
+                <div class="info-row">
+                  <span class="info-label">Nom complet</span>
+                  <span class="info-value">Fatou Ndiaye</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Identifiant</span>
+                  <span class="info-value">3095-1142</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Date de naissance</span>
+                  <span class="info-value">22/08/1994</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Nationalité</span>
+                  <span class="info-value">Sénégalaise</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Ethnie</span>
+                  <span class="info-value">Wolof</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Groupe sanguin</span>
+                  <span class="info-value">A+</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <h2 class="section-title">Résumé clinique</h2>
+              <div class="info-list">
+                <div class="info-row">
+                  <span class="info-label">Allergies</span>
+                  <span class="info-value">Pénicilline</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Maladies chroniques</span>
+                  <span class="info-value">Aucune connue</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Traitement actif</span>
+                  <span class="info-value">Fer + compléments vitaminiques</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Dernière visite</span>
+                  <span class="info-value">11 février 2026</span>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section
+            id="tab-1"
+            class="section"
+            role="tabpanel"
+            aria-labelledby="tab-btn-1"
+          >
+            <article class="history-item">
+              <div class="date">11 février 2026</div>
+              <div class="diagnosis">Consultation au Centre Médical Dakar Plateau</div>
+              <div class="treatment">
+                Fatigue persistante – bilan sanguin recommandé
+              </div>
+            </article>
+
+            <article class="history-item">
+              <div class="date">05 octobre 2025</div>
+              <div class="diagnosis">Consultation de suivi</div>
+              <div class="treatment">
+                Carence en fer légère – supplémentation prescrite
+              </div>
+            </article>
+
+            <article class="history-item">
+              <div class="date">19 avril 2025</div>
+              <div class="diagnosis">Consultation générale</div>
+              <div class="treatment">
+                Contrôle annuel – paramètres vitaux normaux
+              </div>
+            </article>
+          </section>
+
+          <section
+            id="tab-2"
+            class="section"
+            role="tabpanel"
+            aria-labelledby="tab-btn-2"
+          >
+            <article class="card prescription-item">
+              <div class="prescription-name">Complément en fer 80 mg</div>
+              <div class="prescription-meta">
+                1 comprimé par jour pendant 30 jours
+              </div>
+              <div class="date">Prescription active</div>
+            </article>
+
+            <article class="card prescription-item">
+              <div class="prescription-name">Multivitamines</div>
+              <div class="prescription-meta">
+                1 comprimé par jour pendant 30 jours
+              </div>
+              <div class="date">Renouvelée le 11 février 2026</div>
+            </article>
+          </section>
+        </div>
+
+        <footer class="footer">Prototype conceptuel – Africa Health ID</footer>
+      </section>
     </div>
+  </main>
 
-    <!-- INTERFACE PATIENT -->
-    <div id="patient-screen" style="display:none; flex-direction:column; height:100%;">
-      <div class="header">Africa Health ID</div>
+  <script>
+    (() => {
+      const scanScreen = document.getElementById("scan-screen");
+      const patientScreen = document.getElementById("patient-screen");
 
-      <div class="profile">
-        <div class="avatar">E</div>
-        <div class="name">Émilie Tankeu</div>
-        <div class="id">ID Santé : 2048-6733</div>
-        <div class="nationality">🇰🇪 Kenyane</div>
-      </div>
+      const roleButtons = document.querySelectorAll("[data-role]");
+      const tabs = document.querySelectorAll(".tab");
+      const sections = document.querySelectorAll(".section");
 
-      <div class="tabs">
-        <div class="tab active" onclick="showTab(0)">Profil</div>
-        <div class="tab" onclick="showTab(1)">Historique médical</div>
-        <div class="tab" onclick="showTab(2)">Ordonnances</div>
-      </div>
+      const menu = document.getElementById("menu");
+      const menuBackdrop = document.getElementById("menu-backdrop");
+      const menuToggle = document.getElementById("menu-toggle");
+      const menuItems = document.querySelectorAll(".menu-item");
 
-      <div class="content">
-        <!-- Profil -->
-        <div id="tab0" class="section active">
-          <div class="info-card">
-            <strong>Date de naissance :</strong> 15/03/2004<br>
-            <strong>Sexe :</strong> Femme<br>
-            <strong>Groupe sanguin :</strong> A+<br>
-            <strong>Carte valide jusqu'au :</strong> 15/03/2029
-          </div>
-        </div>
+      function showPatientScreen() {
+        scanScreen.classList.add("hidden");
+        patientScreen.classList.remove("hidden");
+      }
 
-        <!-- Historique médical -->
-        <div id="tab1" class="section">
-          <div class="history-item">
-            <div class="date">01 mars 2026</div>
-            <div class="diagnosis">Grippe saisonnière</div>
-            <div class="treatment">Repos + paracétamol</div>
-          </div>
-          <div class="history-item">
-            <div class="date">15 février 2026</div>
-            <div class="diagnosis">Vaccin COVID-19 booster</div>
-            <div class="treatment">Aucun effet secondaire</div>
-          </div>
-          <div class="history-item">
-            <div class="date">10 janvier 2026</div>
-            <div class="diagnosis">Contrôle tension artérielle</div>
-            <div class="treatment">Normale • Suivi annuel</div>
-          </div>
-          <div class="history-item">
-            <div class="date">05 décembre 2025</div>
-            <div class="diagnosis">Consultation de routine</div>
-            <div class="treatment">Bilan sanguin normal</div>
-          </div>
-        </div>
+      function setActiveTab(index) {
+        tabs.forEach((tab, i) => {
+          const isActive = i === index;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", String(isActive));
+        });
 
-        <!-- Ordonnances -->
-        <div id="tab2" class="section">
-          <div class="history-item">
-            <div class="date">01 mars 2026</div>
-            <div class="diagnosis">Ordonnance grippe</div>
-            <div class="treatment">Paracétamol 500mg – 3/jour pendant 5 jours</div>
-          </div>
-          <div class="history-item">
-            <div class="date">15 février 2026</div>
-            <div class="diagnosis">Ordonnance vaccinale</div>
-            <div class="treatment">COVID-19 booster</div>
-          </div>
-        </div>
-      </div>
+        sections.forEach((section, i) => {
+          section.classList.toggle("active", i === index);
+        });
+      }
 
-      <div class="footer">
-        Prototype conceptuel – Africa Health ID
-      </div>
-    </div>
+      function openMenu() {
+        menu.classList.add("open");
+        menuBackdrop.classList.add("open");
+        menuToggle.setAttribute("aria-expanded", "true");
+      }
 
-  </div>
-</div>
+      function closeMenu() {
+        menu.classList.remove("open");
+        menuBackdrop.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
 
-<script>
-  function selectRole(role) {
-    if (role === 0) { // Patient
-      document.getElementById('scan-screen').style.display = 'none';
-      document.getElementById('patient-screen').style.display = 'flex';
-    } else {
-      alert("Interface soignant en cours de développement");
-    }
-  }
+      function toggleMenu() {
+        const isOpen = menu.classList.contains("open");
+        if (isOpen) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      }
 
-  function showTab(n) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab' + n).classList.add('active');
-    document.querySelectorAll('.tab')[n].classList.add('active');
-  }
-</script>
+      roleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const role = button.dataset.role;
 
+          if (role === "patient") {
+            showPatientScreen();
+          }
+        });
+      });
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => setActiveTab(index));
+      });
+
+      menuToggle.addEventListener("click", toggleMenu);
+      menuBackdrop.addEventListener("click", closeMenu);
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", closeMenu);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeMenu();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
