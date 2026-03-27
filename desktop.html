@@ -11,25 +11,25 @@
 
   <style>
     :root {
-      --primary: #0f62fe;
-      --primary-dark: #0b4ecc;
-      --accent: #00b894;
-      --accent-dark: #009874;
-      --success-soft: #ecfdf5;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eaf2ff;
       --text: #0f172a;
+      --text-soft: #334155;
       --muted: #64748b;
-      --muted-2: #94a3b8;
-      --bg: #f8fafc;
-      --panel: #ffffff;
-      --panel-alt: #f8fafc;
-      --border: #e2e8f0;
-      --shadow-sm: 0 8px 20px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 18px 48px rgba(15, 23, 42, 0.12);
+      --bg: #eef4f8;
+      --panel: #f5f9fc;
+      --panel-2: #edf3f8;
+      --surface: #ffffff;
+      --border: #d8e3ee;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: rgba(255, 255, 255, 0.88);
+      --sidebar-muted: rgba(255, 255, 255, 0.62);
+      --sidebar-border: rgba(255, 255, 255, 0.1);
       --radius: 18px;
-      --radius-sm: 14px;
-      --sidebar-width: 276px;
-      --topbar-height: 84px;
-      --transition: 0.22s ease;
+      --sidebar-width: 270px;
+      --topbar-height: 78px;
+      --transition: 0.2s ease;
     }
 
     * {
@@ -46,15 +46,13 @@
     body {
       min-height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(15, 98, 254, 0.08), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(0, 184, 148, 0.08), transparent 24%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
     }
 
     button,
-    input {
+    input,
+    textarea {
       font: inherit;
     }
 
@@ -66,69 +64,66 @@
 
     .app {
       min-height: 100vh;
-      display: grid;
-      grid-template-columns: var(--sidebar-width) 1fr;
+      display: flex;
     }
 
     .sidebar {
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      color: white;
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: width var(--transition), transform var(--transition);
+    }
+
+    .sidebar.collapsed {
+      width: 0;
+    }
+
+    .sidebar-inner {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      height: 100vh;
       position: sticky;
       top: 0;
-      height: 100vh;
-      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color: #fff;
-      padding: 24px 18px;
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      z-index: 30;
+      padding: 18px 14px;
+      gap: 18px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 8px 10px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 12px;
+      padding: 8px 10px 16px;
+      border-bottom: 1px solid var(--sidebar-border);
     }
 
     .brand-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
       display: grid;
       place-items: center;
-      font-size: 20px;
+      font-size: 15px;
       font-weight: 800;
-      box-shadow: 0 10px 24px rgba(15, 98, 254, 0.24);
       flex-shrink: 0;
-    }
-
-    .brand-text {
-      min-width: 0;
     }
 
     .brand-title {
       font-size: 18px;
       font-weight: 800;
       line-height: 1.1;
+      color: white;
     }
 
     .brand-subtitle {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.66);
+      color: var(--sidebar-muted);
       margin-top: 4px;
-    }
-
-    .sidebar-section-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(255, 255, 255, 0.48);
-      padding: 0 12px;
-      margin-bottom: 4px;
     }
 
     .nav-list {
@@ -139,100 +134,82 @@
 
     .nav-btn {
       width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 14px;
-      border-radius: 14px;
-      color: rgba(255, 255, 255, 0.84);
-      font-weight: 600;
       text-align: left;
-      transition: background var(--transition), color var(--transition), transform var(--transition);
+      padding: 13px 14px;
+      border-radius: 12px;
+      color: var(--sidebar-text);
+      font-size: 15px;
+      font-weight: 600;
+      transition: background var(--transition), color var(--transition);
     }
 
     .nav-btn:hover,
     .nav-btn:focus-visible {
       background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+      color: white;
       outline: none;
     }
 
     .nav-btn.active {
-      background: linear-gradient(135deg, rgba(15, 98, 254, 0.28), rgba(0, 184, 148, 0.18));
-      color: #fff;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      background: rgba(59, 130, 246, 0.18);
+      color: white;
+      border: 1px solid rgba(96, 165, 250, 0.2);
     }
 
-    .nav-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      display: grid;
-      place-items: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 16px 12px 6px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: grid;
-      gap: 12px;
+    .sidebar-spacer {
+      flex: 1;
     }
 
     .doctor-card {
+      border-top: 1px solid var(--sidebar-border);
+      padding: 14px 10px 6px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .doctor-avatar {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.12);
+      color: white;
       display: grid;
       place-items: center;
       font-weight: 800;
       flex-shrink: 0;
     }
 
-    .doctor-meta {
-      min-width: 0;
-    }
-
     .doctor-name {
       font-size: 14px;
       font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: white;
     }
 
     .doctor-role {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.62);
+      color: var(--sidebar-muted);
       margin-top: 2px;
     }
 
     .main {
+      flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
+      background: var(--bg);
     }
 
     .topbar {
       height: var(--topbar-height);
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
+      background: var(--surface);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      padding: 18px 28px;
+      gap: 16px;
+      padding: 14px 22px;
       position: sticky;
       top: 0;
       z-index: 20;
@@ -241,55 +218,53 @@
     .topbar-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       min-width: 0;
       flex: 1;
     }
 
-    .sidebar-toggle {
-      display: none;
+    .menu-toggle {
       width: 42px;
       height: 42px;
       border-radius: 12px;
-      background: #fff;
       border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+      display: grid;
       place-items: center;
+      color: var(--primary-dark);
       font-size: 18px;
-      color: var(--text);
+      flex-shrink: 0;
+      background: white;
     }
 
     .search-wrap {
-      flex: 1;
-      min-width: 260px;
       position: relative;
+      width: min(520px, 100%);
     }
 
     .search {
       width: 100%;
-      padding: 13px 18px 13px 46px;
+      height: 44px;
+      padding: 0 16px 0 42px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: #fff;
-      outline: none;
-      font-size: 15px;
+      background: #f8fafc;
       color: var(--text);
-      box-shadow: var(--shadow-sm);
-      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      transition: border-color var(--transition), background var(--transition);
     }
 
     .search:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(15, 98, 254, 0.1);
+      border-color: #bfd4ff;
+      background: white;
     }
 
     .search-icon {
       position: absolute;
-      left: 16px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--muted);
-      font-size: 16px;
+      font-size: 14px;
       pointer-events: none;
     }
 
@@ -300,377 +275,224 @@
       flex-shrink: 0;
     }
 
-    .ghost-btn,
+    .secondary-btn,
     .primary-btn {
+      height: 44px;
+      padding: 0 18px;
       border-radius: 999px;
-      padding: 12px 18px;
       font-size: 14px;
       font-weight: 700;
-      transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
       white-space: nowrap;
+      transition: background var(--transition), color var(--transition);
     }
 
-    .ghost-btn {
-      background: #fff;
+    .secondary-btn {
+      background: white;
       color: var(--text);
       border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+    }
+
+    .secondary-btn:hover,
+    .secondary-btn:focus-visible {
+      background: #f8fafc;
+      outline: none;
     }
 
     .primary-btn {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #fff;
-      box-shadow: 0 10px 24px rgba(15, 98, 254, 0.2);
+      background: var(--primary);
+      color: white;
     }
 
-    .ghost-btn:hover,
     .primary-btn:hover,
-    .ghost-btn:focus-visible,
     .primary-btn:focus-visible {
-      transform: translateY(-1px);
+      background: var(--primary-dark);
       outline: none;
     }
 
     .notif-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: #fff;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
       position: relative;
-      font-size: 18px;
-      color: var(--text);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: white;
       display: grid;
       place-items: center;
+      color: var(--text);
+      font-size: 18px;
+      flex-shrink: 0;
     }
 
     .notif-btn::after {
       content: "2";
       position: absolute;
-      top: -4px;
-      right: -4px;
+      top: -5px;
+      right: -5px;
       min-width: 20px;
       height: 20px;
+      padding: 0 4px;
       border-radius: 999px;
       background: #ef4444;
-      color: #fff;
+      color: white;
       font-size: 11px;
       font-weight: 800;
       display: grid;
       place-items: center;
-      padding: 0 4px;
-      border: 2px solid var(--bg);
+      border: 2px solid white;
+    }
+
+    .topbar-doctor {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-soft);
+      flex-shrink: 0;
+    }
+
+    .topbar-doctor-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #dbeafe;
+      color: var(--primary-dark);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .topbar-doctor-name {
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .page {
-      padding: 28px;
-      display: grid;
-      gap: 22px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    .hero-panel,
-    .finder-card,
-    .summary-card,
-    .section-card,
-    .patient-header {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .hero-panel {
-      padding: 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      min-width: 0;
-    }
-
-    .eyebrow {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent-dark);
-    }
-
-    .hero-title {
-      font-size: 30px;
-      line-height: 1.15;
-      font-weight: 800;
-      max-width: 18ch;
-    }
-
-    .hero-copy {
-      font-size: 15px;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 62ch;
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .tag {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .finder-card {
       padding: 22px;
       display: grid;
-      gap: 16px;
-      align-content: start;
-    }
-
-    .finder-title {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .finder-copy {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .finder-field {
-      display: grid;
-      gap: 10px;
-    }
-
-    .finder-label {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .finder-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-
-    .finder-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(15, 98, 254, 0.1);
-    }
-
-    .quick-ids {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .quick-id {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid var(--border);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      transition: background var(--transition), border-color var(--transition), transform var(--transition);
-    }
-
-    .quick-id:hover,
-    .quick-id:focus-visible {
-      background: #f8fafc;
-      border-color: var(--primary);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .finder-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .summary-card {
-      padding: 18px 18px 20px;
-      min-width: 0;
-    }
-
-    .summary-label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-    }
-
-    .summary-value {
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.55;
-      word-break: break-word;
+      gap: 18px;
+      background: var(--bg);
     }
 
     .patient-header {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
       padding: 24px;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
+      grid-template-columns: auto 1fr auto;
       gap: 18px;
+      align-items: center;
     }
 
     .avatar-large {
-      width: 88px;
-      height: 88px;
+      width: 86px;
+      height: 86px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(15, 98, 254, 0.14), rgba(0, 184, 148, 0.14));
-      color: var(--primary);
+      background: #e7f0ff;
+      color: var(--primary-dark);
       display: grid;
       place-items: center;
       font-size: 34px;
       font-weight: 800;
-      border: 3px solid #fff;
-      box-shadow: var(--shadow-sm);
+      border: 1px solid #d4e4ff;
       flex-shrink: 0;
     }
 
     .patient-main {
       min-width: 0;
-      display: grid;
-      gap: 10px;
     }
 
-    .patient-name-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .patient-name {
+    .patient-main h1 {
       font-size: 30px;
       line-height: 1.1;
       font-weight: 800;
-    }
-
-    .status-pill {
-      border-radius: 999px;
-      background: var(--success-soft);
-      color: #047857;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 800;
-      border: 1px solid #a7f3d0;
+      margin-bottom: 10px;
+      color: #1e293b;
     }
 
     .patient-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 18px;
-      color: var(--muted);
       font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .meta-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      background: var(--panel-alt);
-      border: 1px solid var(--border);
-      border-radius: 999px;
+      line-height: 1.7;
+      color: #475569;
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: flex-end;
     }
 
-    .workspace {
+    .summary-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 22px;
-      align-items: start;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
     }
 
-    .section-card {
-      padding: 22px;
+    .summary-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--panel);
+      padding: 18px;
+      min-height: 120px;
     }
 
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .section-title {
-      font-size: 21px;
+    .summary-label {
+      font-size: 12px;
+      color: #64748b;
       font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
     }
 
-    .section-subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 4px;
+    .summary-value {
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 700;
+      color: #1e293b;
     }
 
     .tabs {
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      padding: 0 6px;
     }
 
     .tab {
-      padding: 11px 16px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid var(--border);
-      color: var(--muted);
+      padding: 14px 16px;
+      font-size: 16px;
       font-weight: 700;
-      font-size: 14px;
-      transition: background var(--transition), color var(--transition), border-color var(--transition);
+      color: #64748b;
+      border-bottom: 4px solid transparent;
+      transition: color var(--transition), border-color var(--transition);
     }
 
     .tab.active {
-      background: rgba(15, 98, 254, 0.08);
       color: var(--primary);
-      border-color: rgba(15, 98, 254, 0.22);
+      border-bottom-color: var(--primary);
     }
 
     .tab-panel {
       display: none;
+      background: transparent;
     }
 
     .tab-panel.active {
       display: block;
+    }
+
+    .content-card {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel-2);
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      color: #1e293b;
     }
 
     .info-list {
@@ -681,10 +503,10 @@
     .info-row {
       display: flex;
       justify-content: space-between;
-      gap: 24px;
-      border-bottom: 1px solid #f1f5f9;
+      gap: 22px;
       padding-bottom: 12px;
-      font-size: 14px;
+      border-bottom: 1px solid #dde7f0;
+      font-size: 15px;
       line-height: 1.5;
     }
 
@@ -694,152 +516,69 @@
     }
 
     .info-label {
-      color: var(--muted);
+      color: #64748b;
       flex-shrink: 0;
     }
 
     .info-value {
       text-align: right;
       font-weight: 700;
+      color: #1e293b;
     }
 
-    .timeline {
+    .history-list,
+    .prescription-list {
       display: grid;
-      gap: 16px;
-    }
-
-    .timeline-item {
-      background: #fbfdff;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .timeline-top {
-      display: flex;
-      justify-content: space-between;
       gap: 14px;
-      align-items: flex-start;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
     }
 
-    .timeline-date {
+    .history-item {
+      border: 1px solid #d7e4f0;
+      border-radius: 18px;
+      background: #f2f7fb;
+      padding: 18px 20px;
+    }
+
+    .history-date {
       font-size: 13px;
-      color: var(--muted);
+      color: #64748b;
       font-weight: 700;
+      margin-bottom: 10px;
     }
 
-    .timeline-badge {
-      font-size: 12px;
+    .history-title {
+      font-size: 19px;
       font-weight: 800;
-      color: var(--accent-dark);
-      background: rgba(0, 184, 148, 0.08);
-      border: 1px solid rgba(0, 184, 148, 0.18);
-      border-radius: 999px;
-      padding: 6px 10px;
-    }
-
-    .timeline-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 17px;
-      font-weight: 800;
+      color: #1e293b;
       margin-bottom: 8px;
+      line-height: 1.4;
     }
 
-    .timeline-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(15, 98, 254, 0.12), rgba(0, 184, 148, 0.12));
-      display: grid;
-      place-items: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .timeline-text {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text);
+    .history-diagnosis {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.55;
       margin-bottom: 6px;
     }
 
-    .timeline-note {
-      color: var(--accent-dark);
-      font-size: 14px;
+    .history-treatment {
+      font-size: 15px;
+      color: #0f172a;
       font-weight: 700;
       line-height: 1.55;
     }
 
-    .side-panel {
-      display: grid;
-      gap: 16px;
-    }
-
-    .side-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .side-card-title {
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .side-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .side-list-item {
-      display: grid;
-      gap: 4px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .side-list-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .side-label {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .side-value {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.5;
-    }
-
-    .empty-state {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-      padding: 12px 0;
-    }
-
     .prototype-footer {
+      text-align: center;
       color: var(--muted);
       font-size: 13px;
-      text-align: center;
-      padding-top: 8px;
+      padding-top: 2px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.48);
-      backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, 0.38);
       display: none;
       align-items: center;
       justify-content: center;
@@ -853,182 +592,96 @@
 
     .modal-card {
       width: 100%;
-      max-width: 620px;
-      background: #fff;
+      max-width: 560px;
+      background: white;
       border: 1px solid var(--border);
-      border-radius: 28px;
-      box-shadow: var(--shadow-md);
-      padding: 26px;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: flex-start;
-      margin-bottom: 18px;
+      border-radius: 22px;
+      padding: 24px;
     }
 
     .modal-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      color: #1e293b;
     }
 
     .modal-copy {
-      color: var(--muted);
       font-size: 14px;
-      line-height: 1.65;
-      max-width: 52ch;
-    }
-
-    .modal-close {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      font-size: 18px;
-      color: var(--text);
-      flex-shrink: 0;
-    }
-
-    .lookup-box {
-      border: 1px dashed #bfdbfe;
-      background: linear-gradient(180deg, #f8fbff 0%, #f9fffd 100%);
-      border-radius: 20px;
-      padding: 20px;
-      display: grid;
-      gap: 16px;
-    }
-
-    .lookup-grid {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: end;
-    }
-
-    .lookup-label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .lookup-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      outline: none;
-      font-size: 15px;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-
-    .lookup-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(15, 98, 254, 0.1);
-    }
-
-    .helper-note {
-      font-size: 13px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
+      margin-bottom: 18px;
     }
 
-    .ids-box {
+    .field-group {
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: white;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .field-input:focus,
+    .field-textarea:focus {
+      border-color: #bfd4ff;
+    }
+
+    .field-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .quick-ids {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 8px;
+    }
+
+    .quick-id {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
     }
 
     .modal-actions {
       display: flex;
       justify-content: flex-end;
       gap: 10px;
-      margin-top: 18px;
       flex-wrap: wrap;
+      margin-top: 10px;
     }
 
-    .sidebar-overlay {
-      display: none;
-    }
-
-    @media (max-width: 1320px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
+    @media (max-width: 1180px) {
       .summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 1024px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        transform: translateX(-100%);
-        transition: transform var(--transition);
-        width: min(320px, 86vw);
-        box-shadow: var(--shadow-md);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.42);
-        z-index: 25;
-      }
-
-      .sidebar-overlay.open {
-        display: block;
-      }
-
-      .sidebar-toggle {
-        display: grid;
-      }
-
-      .topbar {
-        padding: 16px 20px;
-      }
-
-      .page {
-        padding: 20px;
-      }
-
-      .patient-header {
-        grid-template-columns: auto 1fr;
-      }
-
-      .header-actions {
-        grid-column: 1 / -1;
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 760px) {
+    @media (max-width: 980px) {
       .topbar {
         height: auto;
-        align-items: stretch;
         flex-direction: column;
+        align-items: stretch;
       }
 
       .topbar-left,
@@ -1038,64 +691,85 @@
       }
 
       .search-wrap {
-        min-width: 100%;
-      }
-
-      .summary-grid {
-        grid-template-columns: 1fr;
+        width: 100%;
+        max-width: none;
       }
 
       .patient-header {
         grid-template-columns: 1fr;
-        text-align: left;
       }
 
-      .lookup-grid {
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .topbar-doctor {
+        order: 3;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .summary-grid {
         grid-template-columns: 1fr;
-      }
-
-      .modal-card {
-        padding: 20px;
       }
 
       .page {
         padding: 16px;
       }
+
+      .patient-main h1 {
+        font-size: 24px;
+      }
+
+      .tabs {
+        gap: 2px;
+        padding: 0;
+      }
+
+      .tab {
+        padding: 14px 10px;
+        font-size: 15px;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .info-value {
+        text-align: left;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="sidebarOverlay" class="sidebar-overlay"></div>
-
   <div class="app">
     <aside id="sidebar" class="sidebar" aria-label="Navigation principale">
-      <div class="brand">
-        <div class="brand-mark">AH</div>
-        <div class="brand-text">
-          <div class="brand-title">Africa Health ID</div>
-          <div class="brand-subtitle">Espace soignant · Desktop</div>
+      <div class="sidebar-inner">
+        <div class="brand">
+          <div class="brand-mark">AH</div>
+          <div>
+            <div class="brand-title">Africa Health ID</div>
+            <div class="brand-subtitle">Interface soignant</div>
+          </div>
         </div>
-      </div>
 
-      <div>
-        <div class="sidebar-section-title">Navigation</div>
         <ul class="nav-list">
-          <li><button class="nav-btn active" type="button"><span class="nav-icon">🏠</span><span>Tableau de bord</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">👥</span><span>Patients</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">📄</span><span>Ordonnances</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">🩺</span><span>Consultations</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">🧪</span><span>Tests &amp; analyses</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">🛡️</span><span>Assurance</span></button></li>
-          <li><button class="nav-btn" type="button"><span class="nav-icon">⚙️</span><span>Paramètres</span></button></li>
+          <li><button class="nav-btn active" type="button">Tableau de bord</button></li>
+          <li><button class="nav-btn" type="button">Consultations</button></li>
+          <li><button class="nav-btn" type="button">Ordonnances</button></li>
+          <li><button class="nav-btn" type="button">Tests &amp; analyses</button></li>
+          <li><button class="nav-btn" type="button">Synthèse IA / Antécédents</button></li>
+          <li><button class="nav-btn" type="button">Assurance</button></li>
         </ul>
-      </div>
 
-      <div class="sidebar-footer">
+        <div class="sidebar-spacer"></div>
+
         <div class="doctor-card">
           <div class="doctor-avatar">S</div>
-          <div class="doctor-meta">
+          <div>
             <div class="doctor-name">Dr. Samuel Traore</div>
-            <div class="doctor-role">Médecin référent</div>
+            <div class="doctor-role">Professionnel de santé</div>
           </div>
         </div>
       </div>
@@ -1104,7 +778,7 @@
     <main class="main">
       <header class="topbar">
         <div class="topbar-left">
-          <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Ouvrir le menu">☰</button>
+          <button id="menuToggle" class="menu-toggle" type="button" aria-label="Afficher ou masquer le menu">☰</button>
 
           <div class="search-wrap">
             <span class="search-icon">⌕</span>
@@ -1119,170 +793,76 @@
         </div>
 
         <div class="topbar-right">
-          <button id="openLookup" class="primary-btn" type="button">Trouver un dossier</button>
-          <button id="openHistoryQuick" class="ghost-btn" type="button">Accéder à l’historique</button>
+          <button id="openLookup" class="secondary-btn" type="button">Trouver un dossier patient</button>
           <button class="notif-btn" type="button" aria-label="Notifications">🔔</button>
+          <div class="topbar-doctor">
+            <div class="topbar-doctor-avatar">S</div>
+            <div class="topbar-doctor-name">Dr. Samuel Traore</div>
+          </div>
         </div>
       </header>
 
       <div class="page">
-        <section class="hero">
-          <div class="hero-panel">
-            <div class="eyebrow">Interface soignant</div>
-            <h1 class="hero-title">Accédez rapidement au dossier médical du patient.</h1>
-            <p class="hero-copy">
-              Cette version desktop remplace la logique “scanner carte patient” par une recherche de dossier plus réaliste sur ordinateur. Vous pouvez saisir ou coller l’identifiant du patient, ou choisir un dossier de démonstration proposé.
-            </p>
-            <div class="hero-tags">
-              <span class="tag">Accès dossier</span>
-              <span class="tag">Historique médical</span>
-              <span class="tag">Ordonnances</span>
-              <span class="tag">Vue soignant</span>
-            </div>
-          </div>
-
-          <aside class="finder-card">
-            <div>
-              <div class="finder-title">Trouver un patient</div>
-              <div class="finder-copy">
-                Saisissez ou collez l’identifiant QR du patient. Vous pouvez aussi charger directement un dossier de démonstration.
-              </div>
-            </div>
-
-            <div class="finder-field">
-              <label class="finder-label" for="finderInput">Identifiant patient</label>
-              <input
-                id="finderInput"
-                class="finder-input"
-                type="text"
-                value="248-6733"
-                placeholder="Ex. 248-6733"
-              />
-            </div>
-
-            <div class="quick-ids" aria-label="Identifiants de démonstration">
-              <button class="quick-id" type="button" data-patient-id="248-6733">248-6733 · Amina Diop</button>
-              <button class="quick-id" type="button" data-patient-id="921-4421">921-4421 · Moussa Faye</button>
-            </div>
-
-            <div class="finder-actions">
-              <button id="loadFromFinder" class="primary-btn" type="button">Ouvrir le dossier</button>
-              <button id="clearFinder" class="ghost-btn" type="button">Effacer</button>
-            </div>
-          </aside>
-        </section>
-
-        <section class="summary-grid" aria-label="Résumé du dossier">
-          <article class="summary-card">
-            <div class="summary-label">Allergies</div>
-            <div id="allergies" class="summary-value">Aucune allergie connue</div>
-          </article>
-
-          <article class="summary-card">
-            <div class="summary-label">Maladies chroniques</div>
-            <div id="conditions" class="summary-value">Hypertension, Diabète type 2</div>
-          </article>
-
-          <article class="summary-card">
-            <div class="summary-label">Traitement actif</div>
-            <div id="activeTreatment" class="summary-value">Metformine, Amlodipine</div>
-          </article>
-
-          <article class="summary-card">
-            <div class="summary-label">Statut du dossier</div>
-            <div id="recordStatus" class="summary-value">Actif · Dernière visite 14/04/2024</div>
-          </article>
-        </section>
-
         <section class="patient-header">
           <div id="patientInitial" class="avatar-large">A</div>
 
           <div class="patient-main">
-            <div class="patient-name-row">
-              <h2 id="patientName" class="patient-name">Amina Diop</h2>
-              <span class="status-pill">Dossier actif</span>
-            </div>
-
+            <h1 id="patientName">Amina Diop</h1>
             <div id="patientMeta" class="patient-meta">
-              <span class="meta-chip">ID : 248-6733</span>
-              <span class="meta-chip">Naissance : 15/06/1990</span>
-              <span class="meta-chip">Sexe : Femme</span>
-              <span class="meta-chip">Groupe : O+</span>
-              <span class="meta-chip">🇸🇳 Sénégalaise</span>
+              ID : 248-6733<br>
+              Date de naissance : 15/06/1990<br>
+              Sexe : Femme<br>
+              Groupe sanguin : O+<br>
+              🇸🇳 Sénégalaise
             </div>
           </div>
 
           <div class="header-actions">
-            <button class="ghost-btn" type="button">Voir les analyses</button>
-            <button class="primary-btn" type="button">Modifier les infos</button>
+            <button id="openConsultation" class="primary-btn" type="button">+ Nouvelle consultation</button>
           </div>
         </section>
 
-        <section class="workspace">
-          <div class="section-card">
-            <div class="section-head">
-              <div>
-                <div class="section-title">Dossier médical</div>
-                <div class="section-subtitle">Vue synthétique et historique clinique du patient sélectionné.</div>
-              </div>
+        <section class="summary-grid" aria-label="Résumé clinique permanent">
+          <article class="summary-card">
+            <div class="summary-label">Allergies</div>
+            <div id="summaryAllergies" class="summary-value">Aucune connue</div>
+          </article>
 
-              <div class="tabs" role="tablist" aria-label="Navigation du dossier médical">
-                <button class="tab active" type="button" data-tab="profil">Profil</button>
-                <button class="tab" type="button" data-tab="historique">Historique médical</button>
-                <button class="tab" type="button" data-tab="ordonnances">Ordonnances</button>
-              </div>
-            </div>
+          <article class="summary-card">
+            <div class="summary-label">Maladies chroniques</div>
+            <div id="summaryConditions" class="summary-value">Hypertension, diabète type 2</div>
+          </article>
 
-            <div id="panel-profil" class="tab-panel active">
-              <div class="info-list" id="profileInfo"></div>
-            </div>
+          <article class="summary-card">
+            <div class="summary-label">Traitement actif</div>
+            <div id="summaryTreatment" class="summary-value">Metformine, Amlodipine</div>
+          </article>
 
-            <div id="panel-historique" class="tab-panel">
-              <div id="historyContainer" class="timeline"></div>
-            </div>
+          <article class="summary-card">
+            <div class="summary-label">Statut du dossier</div>
+            <div id="summaryStatus" class="summary-value">Actif · Dernière visite 14/04/2024</div>
+          </article>
+        </section>
 
-            <div id="panel-ordonnances" class="tab-panel">
-              <div id="prescriptionsContainer" class="timeline"></div>
-            </div>
+        <div class="tabs" role="tablist" aria-label="Navigation du dossier médical">
+          <button class="tab active" type="button" data-tab="profil">Profil</button>
+          <button class="tab" type="button" data-tab="historique">Historique médical</button>
+          <button class="tab" type="button" data-tab="ordonnances">Ordonnances</button>
+        </div>
+
+        <section id="panel-profil" class="tab-panel active">
+          <div class="content-card">
+            <div class="section-title">Résumé clinique</div>
+            <div id="profileInfo" class="info-list"></div>
           </div>
+        </section>
 
-          <aside class="side-panel">
-            <div class="side-card">
-              <div class="side-card-title">Accès rapide</div>
-              <div class="side-list">
-                <div class="side-list-item">
-                  <div class="side-label">Recherche dossier</div>
-                  <div class="side-value">Saisir un identifiant ou choisir une suggestion.</div>
-                </div>
-                <div class="side-list-item">
-                  <div class="side-label">IDs de démo</div>
-                  <div class="side-value">248-6733 · 921-4421</div>
-                </div>
-                <div class="side-list-item">
-                  <div class="side-label">Action conseillée</div>
-                  <div class="side-value">Ouvrir le dossier puis consulter l’historique médical.</div>
-                </div>
-              </div>
-            </div>
+        <section id="panel-historique" class="tab-panel">
+          <div id="historyContainer" class="history-list"></div>
+        </section>
 
-            <div class="side-card">
-              <div class="side-card-title">Dossier courant</div>
-              <div class="side-list">
-                <div class="side-list-item">
-                  <div class="side-label">Patient</div>
-                  <div id="sidePatientName" class="side-value">Amina Diop</div>
-                </div>
-                <div class="side-list-item">
-                  <div class="side-label">Identifiant</div>
-                  <div id="sidePatientId" class="side-value">248-6733</div>
-                </div>
-                <div class="side-list-item">
-                  <div class="side-label">Dernière visite</div>
-                  <div id="sideLastVisit" class="side-value">14 avril 2024</div>
-                </div>
-              </div>
-            </div>
-          </aside>
+        <section id="panel-ordonnances" class="tab-panel">
+          <div id="prescriptionsContainer" class="prescription-list"></div>
         </section>
 
         <div class="prototype-footer">
@@ -1294,47 +874,94 @@
 
   <div id="lookupModal" class="modal" aria-hidden="true">
     <div class="modal-card">
-      <div class="modal-header">
-        <div>
-          <div class="modal-title">Trouver un dossier patient</div>
-          <div class="modal-copy">
-            Sur desktop, il est plus logique de rechercher un dossier que de “scanner” une carte. Pour cette démo, saisissez ou collez l’identifiant patient, ou utilisez une suggestion :
-            <strong>248-6733</strong> ou <strong>921-4421</strong>.
-          </div>
-        </div>
-
-        <button id="closeLookup" class="modal-close" type="button" aria-label="Fermer">✕</button>
+      <div class="modal-title">Trouver un dossier patient</div>
+      <div class="modal-copy">
+        Saisissez ou collez l’identifiant QR du patient. IDs de démonstration :
+        <strong>248-6733</strong> et <strong>921-4421</strong>.
       </div>
 
-      <div class="lookup-box">
-        <div class="lookup-grid">
-          <div>
-            <label class="lookup-label" for="modalPatientId">Identifiant du patient</label>
-            <input
-              id="modalPatientId"
-              class="lookup-input"
-              type="text"
-              value="248-6733"
-              placeholder="Ex. 248-6733"
-            />
-          </div>
+      <div class="field-group">
+        <label class="field-label" for="patientIdInput">Identifiant du patient</label>
+        <input
+          id="patientIdInput"
+          class="field-input"
+          type="text"
+          value="248-6733"
+          placeholder="Ex. 248-6733"
+        />
+      </div>
 
-          <button id="loadFromModal" class="primary-btn" type="button">Ouvrir le dossier</button>
-        </div>
-
-        <div class="ids-box">
-          <button class="quick-id" type="button" data-patient-id="248-6733">248-6733 · Amina Diop</button>
-          <button class="quick-id" type="button" data-patient-id="921-4421">921-4421 · Moussa Faye</button>
-        </div>
-
-        <div class="helper-note">
-          Conseil : utilisez “Trouver un dossier” pour changer rapidement de patient, puis “Accéder à l’historique” pour ouvrir directement l’onglet correspondant.
-        </div>
+      <div class="quick-ids">
+        <button class="quick-id" type="button" data-patient-id="248-6733">248-6733 · Amina Diop</button>
+        <button class="quick-id" type="button" data-patient-id="921-4421">921-4421 · Moussa Faye</button>
       </div>
 
       <div class="modal-actions">
-        <button id="cancelLookup" class="ghost-btn" type="button">Annuler</button>
+        <button id="closeLookup" class="secondary-btn" type="button">Annuler</button>
+        <button id="loadPatient" class="primary-btn" type="button">Ouvrir le dossier</button>
       </div>
+    </div>
+  </div>
+
+  <div id="consultModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-title">Nouvelle consultation</div>
+      <div class="modal-copy">
+        Saisissez les informations de la consultation pour le patient actuellement ouvert.
+      </div>
+
+      <form id="consultForm">
+        <div class="field-group">
+          <label class="field-label" for="consultDate">Date</label>
+          <input
+            id="consultDate"
+            name="date"
+            class="field-input"
+            type="date"
+            value="2026-03-26"
+            required
+          />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="consultSymptoms">Motif / Symptômes</label>
+          <textarea
+            id="consultSymptoms"
+            name="symptoms"
+            class="field-textarea"
+            required
+          >Douleurs abdominales depuis 3 jours</textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="consultDiagnosis">Diagnostic</label>
+          <input
+            id="consultDiagnosis"
+            name="diagnosis"
+            class="field-input"
+            type="text"
+            value="Gastrite aiguë"
+            required
+          />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="consultTreatment">Traitement prescrit</label>
+          <input
+            id="consultTreatment"
+            name="treatment"
+            class="field-input"
+            type="text"
+            value="Oméprazole 20 mg + antispasmodique"
+            required
+          />
+        </div>
+
+        <div class="modal-actions">
+          <button id="closeConsultation" class="secondary-btn" type="button">Annuler</button>
+          <button class="primary-btn" type="submit">Enregistrer</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -1348,64 +975,62 @@
           gender: "Femme",
           bloodGroup: "O+",
           nationality: "🇸🇳 Sénégalaise",
-          allergies: "Aucune allergie connue",
-          conditions: "Hypertension, Diabète type 2",
-          activeTreatment: "Metformine, Amlodipine",
-          recordStatus: "Actif · Dernière visite 14/04/2024",
+          summary: {
+            allergies: "Aucune allergie connue",
+            conditions: "Hypertension artérielle essentielle, diabète de type 2",
+            treatment: "Metformine, Amlodipine",
+            status: "Actif · Dernière visite 14/04/2024"
+          },
           profile: [
-            ["Nom complet", "Amina Diop"],
-            ["Identifiant", "248-6733"],
-            ["Date de naissance", "15/06/1990"],
-            ["Sexe", "Femme"],
-            ["Nationalité", "Sénégalaise"],
-            ["Groupe sanguin", "O+"],
             ["Allergies", "Aucune allergie connue"],
-            ["Maladies chroniques", "Hypertension, Diabète type 2"],
-            ["Traitement actif", "Metformine, Amlodipine"],
+            ["Maladies chroniques", "Hypertension artérielle essentielle, diabète de type 2"],
+            ["Traitement actif", "Metformine 850 mg x2/j, Amlodipine 10 mg/j"],
             ["Dernière visite", "14 avril 2024"]
           ],
           history: [
             {
               date: "14 avril 2024",
-              icon: "🩺",
               title: "Consultation à l'Hôpital Principal de Dakar",
-              diagnosis: "Hypertension artérielle",
-              treatment: "Amlodipine, Hydrochlorothiazide",
-              badge: "Consultation"
+              diagnosis: "Hypertension artérielle non contrôlée avec céphalées intermittentes",
+              treatment: "Introduction d’Hydrochlorothiazide 25 mg/j en association à l’Amlodipine"
             },
             {
-              date: "12 février 2024",
-              icon: "🧪",
-              title: "Analyses sanguines – Laboratoire Dakar Médical",
-              diagnosis: "Contrôle glycémie et cholestérol",
-              treatment: "Suivi recommandé par médecin traitant",
-              badge: "Analyse"
+              date: "17 janvier 2024",
+              title: "Hospitalisation aux Urgences de Dakar",
+              diagnosis: "Fracture fermée du radius distal gauche après traumatisme domestique",
+              treatment: "Immobilisation plâtrée, antalgie palier II, contrôle radiographique programmé"
             },
             {
               date: "02 octobre 2023",
-              icon: "🩺",
               title: "Consultation au Centre Médical Dakar Plateau",
-              diagnosis: "Contrôle trimestriel",
-              treatment: "Tension élevée, Cholestérol élevé",
-              badge: "Consultation"
+              diagnosis: "Bilan trimestriel du diabète avec dyslipidémie associée",
+              treatment: "HbA1c élevée, adaptation hygiéno-diététique et poursuite Metformine"
+            },
+            {
+              date: "19 juin 2023",
+              title: "Évaluation cardiométabolique",
+              diagnosis: "Syndrome métabolique débutant avec surcharge pondérale",
+              treatment: "Prescription de bilan lipidique, microalbuminurie et ECG de repos"
             }
           ],
           prescriptions: [
             {
               date: "14 avril 2024",
-              icon: "💊",
-              title: "Ordonnance active",
-              diagnosis: "Hypertension artérielle",
-              treatment: "Amlodipine, Hydrochlorothiazide",
-              badge: "Active"
+              title: "Ordonnance antihypertensive",
+              diagnosis: "HTA essentielle",
+              treatment: "Amlodipine 10 mg/j + Hydrochlorothiazide 25 mg/j pendant 30 jours"
             },
             {
               date: "02 octobre 2023",
-              icon: "💊",
-              title: "Renouvellement de traitement",
-              diagnosis: "Suivi diabète type 2",
-              treatment: "Metformine",
-              badge: "Historique"
+              title: "Ordonnance antidiabétique",
+              diagnosis: "Diabète de type 2",
+              treatment: "Metformine 850 mg matin et soir pendant 90 jours"
+            },
+            {
+              date: "19 juin 2023",
+              title: "Prescription de bilan biologique",
+              diagnosis: "Suivi cardiométabolique",
+              treatment: "Glycémie à jeun, HbA1c, ionogramme, créatininémie, bilan lipidique"
             }
           ]
         },
@@ -1417,64 +1042,62 @@
           gender: "Homme",
           bloodGroup: "A+",
           nationality: "🇸🇳 Sénégalais",
-          allergies: "Pénicilline",
-          conditions: "Asthme",
-          activeTreatment: "Salbutamol",
-          recordStatus: "Actif · Dernière visite 03/05/2024",
+          summary: {
+            allergies: "Pénicilline",
+            conditions: "Asthme persistant modéré, antécédent d’appendicectomie",
+            treatment: "Salbutamol inhalé, Budésonide",
+            status: "Actif · Dernière visite 03/05/2024"
+          },
           profile: [
-            ["Nom complet", "Moussa Faye"],
-            ["Identifiant", "921-4421"],
-            ["Date de naissance", "03/09/1984"],
-            ["Sexe", "Homme"],
-            ["Nationalité", "Sénégalais"],
-            ["Groupe sanguin", "A+"],
             ["Allergies", "Pénicilline"],
-            ["Maladies chroniques", "Asthme"],
-            ["Traitement actif", "Salbutamol"],
+            ["Maladies chroniques", "Asthme persistant modéré, antécédent d’appendicectomie"],
+            ["Traitement actif", "Salbutamol inhalé à la demande, Budésonide 200 µg"],
             ["Dernière visite", "03 mai 2024"]
           ],
           history: [
             {
               date: "03 mai 2024",
-              icon: "🩺",
               title: "Consultation au Centre de Santé de Thiès",
-              diagnosis: "Crise d'asthme légère",
-              treatment: "Salbutamol, suivi respiratoire",
-              badge: "Consultation"
+              diagnosis: "Exacerbation asthmatique légère avec sibilants diffus à l’auscultation",
+              treatment: "Nébulisation de Salbutamol, corticothérapie inhalée renforcée, suivi respiratoire"
             },
             {
               date: "11 février 2024",
-              icon: "🧪",
-              title: "Bilan respiratoire",
-              diagnosis: "Fonction pulmonaire stable",
-              treatment: "Contrôle annuel recommandé",
-              badge: "Analyse"
+              title: "Exploration fonctionnelle respiratoire",
+              diagnosis: "Trouble ventilatoire obstructif modéré réversible après bronchodilatateur",
+              treatment: "Réévaluation du traitement de fond et éducation thérapeutique"
             },
             {
               date: "19 août 2023",
-              icon: "🏥",
               title: "Urgences – Hôpital régional de Thiès",
-              diagnosis: "Crise d'asthme modérée",
-              treatment: "Nébulisation et observation 24h",
-              badge: "Urgence"
+              diagnosis: "Crise d’asthme modérée avec désaturation transitoire",
+              treatment: "Nébulisation répétée, oxygénothérapie courte durée, surveillance clinique 24 h"
+            },
+            {
+              date: "07 mars 2022",
+              title: "Chirurgie digestive – appendicectomie",
+              diagnosis: "Appendicite aiguë suppurée confirmée en peropératoire",
+              treatment: "Appendicectomie par laparotomie, antibiothérapie postopératoire, suivi chirurgical"
             }
           ],
           prescriptions: [
             {
               date: "03 mai 2024",
-              icon: "💊",
-              title: "Ordonnance active",
-              diagnosis: "Asthme",
-              treatment: "Salbutamol",
-              badge: "Active"
+              title: "Ordonnance pneumologique",
+              diagnosis: "Asthme persistant modéré",
+              treatment: "Salbutamol inhalé si besoin + Budésonide 200 µg, 2 bouffées matin/soir"
             },
             {
               date: "11 février 2024",
-              icon: "💊",
-              title: "Contrôle annuel",
-              diagnosis: "Traitement respiratoire",
-              treatment: "Poursuite du traitement",
-              badge: "Historique"
+              title: "Prescription d’examens respiratoires",
+              diagnosis: "Suivi pneumologique spécialisé",
+              treatment: "EFR, débit expiratoire de pointe, radiographie thoracique si persistance symptômes"
+            },
+            {
+              date: "08 mars 2022",
+              title: "Ordonnance postopératoire",
+              diagnosis: "Post-appendicectomie",
+              treatment: "Paracétamol, pansement quotidien, contrôle chirurgical à J7"
             }
           ]
         }
@@ -1483,8 +1106,7 @@
       let currentPatientId = "248-6733";
 
       const sidebar = document.getElementById("sidebar");
-      const sidebarOverlay = document.getElementById("sidebarOverlay");
-      const sidebarToggle = document.getElementById("sidebarToggle");
+      const menuToggle = document.getElementById("menuToggle");
 
       const tabs = document.querySelectorAll(".tab");
       const panels = {
@@ -1493,62 +1115,39 @@
         ordonnances: document.getElementById("panel-ordonnances")
       };
 
-      const finderInput = document.getElementById("finderInput");
-      const modalPatientId = document.getElementById("modalPatientId");
       const globalSearch = document.getElementById("globalSearch");
-
-      const openLookup = document.getElementById("openLookup");
-      const openHistoryQuick = document.getElementById("openHistoryQuick");
-      const lookupModal = document.getElementById("lookupModal");
-      const closeLookup = document.getElementById("closeLookup");
-      const cancelLookup = document.getElementById("cancelLookup");
-      const loadFromModal = document.getElementById("loadFromModal");
-      const loadFromFinder = document.getElementById("loadFromFinder");
-      const clearFinder = document.getElementById("clearFinder");
 
       const patientInitial = document.getElementById("patientInitial");
       const patientName = document.getElementById("patientName");
       const patientMeta = document.getElementById("patientMeta");
 
-      const allergies = document.getElementById("allergies");
-      const conditions = document.getElementById("conditions");
-      const activeTreatment = document.getElementById("activeTreatment");
-      const recordStatus = document.getElementById("recordStatus");
+      const summaryAllergies = document.getElementById("summaryAllergies");
+      const summaryConditions = document.getElementById("summaryConditions");
+      const summaryTreatment = document.getElementById("summaryTreatment");
+      const summaryStatus = document.getElementById("summaryStatus");
 
       const profileInfo = document.getElementById("profileInfo");
       const historyContainer = document.getElementById("historyContainer");
       const prescriptionsContainer = document.getElementById("prescriptionsContainer");
 
-      const sidePatientName = document.getElementById("sidePatientName");
-      const sidePatientId = document.getElementById("sidePatientId");
-      const sideLastVisit = document.getElementById("sideLastVisit");
+      const lookupModal = document.getElementById("lookupModal");
+      const openLookup = document.getElementById("openLookup");
+      const closeLookup = document.getElementById("closeLookup");
+      const loadPatientBtn = document.getElementById("loadPatient");
+      const patientIdInput = document.getElementById("patientIdInput");
 
-      function openSidebar() {
-        sidebar.classList.add("open");
-        sidebarOverlay.classList.add("open");
-      }
+      const consultModal = document.getElementById("consultModal");
+      const openConsultation = document.getElementById("openConsultation");
+      const closeConsultation = document.getElementById("closeConsultation");
+      const consultForm = document.getElementById("consultForm");
 
-      function closeSidebar() {
-        sidebar.classList.remove("open");
-        sidebarOverlay.classList.remove("open");
-      }
-
-      function openModal() {
-        lookupModal.classList.add("open");
-        lookupModal.setAttribute("aria-hidden", "false");
-        modalPatientId.focus();
-        modalPatientId.select();
-      }
-
-      function closeModal() {
-        lookupModal.classList.remove("open");
-        lookupModal.setAttribute("aria-hidden", "true");
+      function toggleSidebar() {
+        sidebar.classList.toggle("collapsed");
       }
 
       function setActiveTab(tabName) {
         tabs.forEach((tab) => {
-          const isActive = tab.dataset.tab === tabName;
-          tab.classList.toggle("active", isActive);
+          tab.classList.toggle("active", tab.dataset.tab === tabName);
         });
 
         Object.entries(panels).forEach(([name, panel]) => {
@@ -1556,60 +1155,41 @@
         });
       }
 
-      function getLastVisitLabel(recordStatusText) {
-        const marker = "Dernière visite ";
-        if (recordStatusText.includes(marker)) {
-          return recordStatusText.split(marker)[1];
-        }
-        return "Non renseignée";
+      function openModal(modal) {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
       }
 
-      function renderProfile(profileRows) {
-        profileInfo.innerHTML = profileRows
-          .map(([label, value]) => {
-            return `
-              <div class="info-row">
-                <span class="info-label">${label}</span>
-                <span class="info-value">${value}</span>
-              </div>
-            `;
-          })
-          .join("");
+      function closeModal(modal) {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
       }
 
-      function renderTimeline(container, entries, emptyMessage) {
-        if (!entries || entries.length === 0) {
-          container.innerHTML = `<div class="empty-state">${emptyMessage}</div>`;
-          return;
-        }
+      function renderProfile(rows) {
+        profileInfo.innerHTML = rows.map(([label, value]) => `
+          <div class="info-row">
+            <span class="info-label">${label}</span>
+            <span class="info-value">${value}</span>
+          </div>
+        `).join("");
+      }
 
-        container.innerHTML = entries
-          .map((entry) => {
-            return `
-              <article class="timeline-item">
-                <div class="timeline-top">
-                  <div class="timeline-date">${entry.date}</div>
-                  <div class="timeline-badge">${entry.badge || "Entrée"}</div>
-                </div>
-
-                <div class="timeline-title">
-                  <span class="timeline-icon">${entry.icon || "•"}</span>
-                  <span>${entry.title}</span>
-                </div>
-
-                <div class="timeline-text">${entry.diagnosis}</div>
-                ${entry.treatment ? `<div class="timeline-note">${entry.treatment}</div>` : ""}
-              </article>
-            `;
-          })
-          .join("");
+      function renderList(entries, container) {
+        container.innerHTML = entries.map((entry) => `
+          <article class="history-item">
+            <div class="history-date">${entry.date}</div>
+            <div class="history-title">${entry.title}</div>
+            <div class="history-diagnosis">${entry.diagnosis}</div>
+            ${entry.treatment ? `<div class="history-treatment">${entry.treatment}</div>` : ""}
+          </article>
+        `).join("");
       }
 
       function renderPatient(id) {
         const patient = patients[id];
 
         if (!patient) {
-          window.alert("Aucun dossier trouvé pour cet identifiant. Essayez 248-6733 ou 921-4421.");
+          window.alert("Aucun patient trouvé. Essayez 248-6733 ou 921-4421.");
           return false;
         }
 
@@ -1617,70 +1197,40 @@
 
         patientInitial.textContent = patient.firstName.charAt(0).toUpperCase();
         patientName.textContent = `${patient.firstName} ${patient.lastName}`;
-
         patientMeta.innerHTML = `
-          <span class="meta-chip">ID : ${id}</span>
-          <span class="meta-chip">Naissance : ${patient.birthDate}</span>
-          <span class="meta-chip">Sexe : ${patient.gender}</span>
-          <span class="meta-chip">Groupe : ${patient.bloodGroup}</span>
-          <span class="meta-chip">${patient.nationality}</span>
+          ID : ${id}<br>
+          Date de naissance : ${patient.birthDate}<br>
+          Sexe : ${patient.gender}<br>
+          Groupe sanguin : ${patient.bloodGroup}<br>
+          ${patient.nationality}
         `;
 
-        allergies.textContent = patient.allergies;
-        conditions.textContent = patient.conditions;
-        activeTreatment.textContent = patient.activeTreatment;
-        recordStatus.textContent = patient.recordStatus;
+        summaryAllergies.textContent = patient.summary.allergies;
+        summaryConditions.textContent = patient.summary.conditions;
+        summaryTreatment.textContent = patient.summary.treatment;
+        summaryStatus.textContent = patient.summary.status;
 
         renderProfile(patient.profile);
-        renderTimeline(historyContainer, patient.history, "Aucun historique médical disponible.");
-        renderTimeline(prescriptionsContainer, patient.prescriptions, "Aucune ordonnance disponible.");
+        renderList(patient.history, historyContainer);
+        renderList(patient.prescriptions, prescriptionsContainer);
 
-        sidePatientName.textContent = `${patient.firstName} ${patient.lastName}`;
-        sidePatientId.textContent = id;
-        sideLastVisit.textContent = getLastVisitLabel(patient.recordStatus);
-
-        finderInput.value = id;
-        modalPatientId.value = id;
         globalSearch.value = `${patient.firstName} ${patient.lastName} · ${id}`;
+        patientIdInput.value = id;
 
         return true;
       }
 
-      function loadPatientFromValue(rawValue, switchToHistory = false) {
-        const id = rawValue.trim();
-
-        if (!id) {
-          window.alert("Veuillez saisir un identifiant patient.");
-          return;
-        }
-
+      function loadPatientFromInput() {
+        const id = patientIdInput.value.trim();
         const success = renderPatient(id);
 
         if (success) {
-          closeModal();
-          if (switchToHistory) {
-            setActiveTab("historique");
-          }
+          closeModal(lookupModal);
+          setActiveTab("profil");
         }
       }
 
-      sidebarToggle.addEventListener("click", openSidebar);
-      sidebarOverlay.addEventListener("click", closeSidebar);
-
-      openLookup.addEventListener("click", openModal);
-      openHistoryQuick.addEventListener("click", () => {
-        openModal();
-        setTimeout(() => setActiveTab("historique"), 0);
-      });
-
-      closeLookup.addEventListener("click", closeModal);
-      cancelLookup.addEventListener("click", closeModal);
-
-      lookupModal.addEventListener("click", (event) => {
-        if (event.target === lookupModal) {
-          closeModal();
-        }
-      });
+      menuToggle.addEventListener("click", toggleSidebar);
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -1688,36 +1238,30 @@
         });
       });
 
-      loadFromModal.addEventListener("click", () => {
-        loadPatientFromValue(modalPatientId.value);
+      openLookup.addEventListener("click", () => {
+        openModal(lookupModal);
+        patientIdInput.focus();
+        patientIdInput.select();
       });
 
-      loadFromFinder.addEventListener("click", () => {
-        loadPatientFromValue(finderInput.value);
-      });
+      closeLookup.addEventListener("click", () => closeModal(lookupModal));
+      loadPatientBtn.addEventListener("click", loadPatientFromInput);
 
-      clearFinder.addEventListener("click", () => {
-        finderInput.value = "";
-        finderInput.focus();
+      lookupModal.addEventListener("click", (event) => {
+        if (event.target === lookupModal) {
+          closeModal(lookupModal);
+        }
       });
 
       document.querySelectorAll("[data-patient-id]").forEach((button) => {
         button.addEventListener("click", () => {
-          const id = button.dataset.patientId;
-          finderInput.value = id;
-          modalPatientId.value = id;
+          patientIdInput.value = button.dataset.patientId;
         });
       });
 
-      modalPatientId.addEventListener("keydown", (event) => {
+      patientIdInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
-          loadPatientFromValue(modalPatientId.value);
-        }
-      });
-
-      finderInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          loadPatientFromValue(finderInput.value);
+          loadPatientFromInput();
         }
       });
 
@@ -1740,15 +1284,51 @@
         }
       });
 
+      openConsultation.addEventListener("click", () => {
+        openModal(consultModal);
+      });
+
+      closeConsultation.addEventListener("click", () => {
+        closeModal(consultModal);
+      });
+
+      consultModal.addEventListener("click", (event) => {
+        if (event.target === consultModal) {
+          closeModal(consultModal);
+        }
+      });
+
+      consultForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(consultForm);
+        const date = formData.get("date");
+        const diagnosis = formData.get("diagnosis");
+        const treatment = formData.get("treatment");
+
+        patients[currentPatientId].history.unshift({
+          date,
+          title: "Nouvelle consultation enregistrée",
+          diagnosis,
+          treatment
+        });
+
+        renderList(patients[currentPatientId].history, historyContainer);
+        setActiveTab("historique");
+        closeModal(consultModal);
+
+        window.alert("Consultation enregistrée avec succès (démo).");
+      });
+
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-          closeModal();
-          closeSidebar();
+          closeModal(lookupModal);
+          closeModal(consultModal);
         }
       });
 
       renderPatient(currentPatientId);
-      setActiveTab("historique");
+      setActiveTab("profil");
     })();
   </script>
 </body>
